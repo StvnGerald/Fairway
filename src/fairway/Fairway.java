@@ -5,21 +5,23 @@
 package fairway;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Date;
 
 /**
  *
  * @author steve
  */
-public class Fairway {
-
+public class Tubes {
     /**
      * @param args the command line arguments
      */
+    static HashMap<String, ArrayList<Job>> SortedJob = new HashMap<>();
      public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         AccountManager accountManager = new AccountManager();
-        Jobseeker jobSeeker;
+        User jobSeeker;
 
         while (true) {
             try {
@@ -60,7 +62,8 @@ public class Fairway {
                                 case 2:
                                     System.out.print("Masukkan nama perusahaan: ");
                                     String companyName = scanner.nextLine();
-                                    Instansi instansi = new Instansi(username, password, companyName);
+                                    User instansi = new Instansi(username, password, companyName);
+                                    SortedJob.put(companyName, new ArrayList<>());
                                     if (accountManager.register(instansi)) {
                                         System.out.println("Pendaftaran berhasil sebagai Instansi!");
                                     } else {
@@ -89,7 +92,7 @@ public class Fairway {
                                 System.out.println("Login berhasil sebagai " + loggedInUser.getRole() + "!");
                                 if (loggedInUser instanceof Jobseeker) {
                                     jobSeeker = (Jobseeker) loggedInUser;
-                                    jobseekerMenu(scanner, jobSeeker, accountManager);
+                                    jobseekerMenu(scanner, (Jobseeker) jobSeeker, accountManager);
                                 } else if (loggedInUser instanceof Instansi) {
                                     instansiMenu(scanner, (Instansi) loggedInUser, accountManager);
                                 }
@@ -124,6 +127,7 @@ public class Fairway {
                 System.out.println("\n=== Menu JobSeeker ===");
                 System.out.println("1. Lihat lowongan");
                 System.out.println("2. Lihat lamaran saya");
+                System.out.println("4. Lihat lowongan berdasarkan instansi");
                 System.out.println("3. Logout");
                 System.out.print("Pilih opsi: ");
                 int jobSeekerChoice = scanner.nextInt();
@@ -175,6 +179,11 @@ public class Fairway {
                         break;
                     case 3:
                         break OUTER;
+                    case 4:
+                        String instansi = scanner.nextLine();
+                        for (Job J : SortedJob.get(instansi)) {
+                            J.displayJobDetails();
+                        }
                     default:
                         System.out.println("Pilihan tidak valid.");
                         break;
@@ -219,6 +228,7 @@ public class Fairway {
                         int limitPenerimaan = scanner.nextInt();
                         Job job = new Job(jobTitle, kategori, jobDescription, instansi.getCompanyName(), lokasiKerja, syaratPelamar, hireDate, gaji, expireDate, limitPenerimaan);
                         accountManager.addJob(job);
+                        SortedJob.get(instansi.getCompanyName()).add(job);
                         instansi.createJob(jobTitle, kategori, jobDescription, lokasiKerja, syaratPelamar, hireDate, gaji, expireDate, limitPenerimaan);
                         break;
                     case 2:
