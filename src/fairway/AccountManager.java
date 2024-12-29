@@ -3,7 +3,7 @@ package fairway;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AccountManager {
+public class AccountManager implements IAccountManagerBiz{
     private ArrayList<User> users = new ArrayList<>();
     private HashMap<String, ArrayList<Job>> jobListings = new HashMap<>(); // Daftar semua lowongan pekerjaan berdasarkan instansi
 
@@ -36,6 +36,7 @@ public class AccountManager {
     }
 
     // Proses login untuk Jobseeker, Instansi, atau Admin
+    @Override
     public User login(String username, String password) throws IllegalArgumentException {
         if (username == null || password == null || username.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("Username atau password tidak boleh kosong.");
@@ -49,6 +50,7 @@ public class AccountManager {
     }
 
     // Menambahkan lowongan pekerjaan untuk instansi
+    @Override
     public void addJob(Job job) throws IllegalArgumentException {
         if (job == null || job.getCompanyName() == null || job.getCompanyName().isEmpty()) {
             throw new IllegalArgumentException("Job atau nama perusahaan tidak valid.");
@@ -63,6 +65,7 @@ public class AccountManager {
     }
 
     // Mengambil daftar lowongan pekerjaan untuk Jobseeker
+    @Override
     public ArrayList<Job> getJobListings() {
         ArrayList<Job> allJobs = new ArrayList<>();
         // Menggabungkan semua lowongan dari berbagai instansi
