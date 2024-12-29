@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @author steve
  */
-public class Tubes {
+public class Fairway {
     /**
      * @param args the command line arguments
      */
