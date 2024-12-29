@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package fairway;
+
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,15 +16,17 @@ import java.util.List;
  * @author steve
  */
 public class Fairway {
+
     /**
      * @param args the command line arguments
      */
     static HashMap<String, ArrayList<Job>> SortedJob = new HashMap<>();
-     public static void main(String[] args) {
+
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         AccountManager accountManager = new AccountManager();
         User jobSeeker;
-        
+
         // Menambahkan admin default untuk testing
         Admin admin = new Admin("admin", "admin123", "Admin");
         accountManager.register(admin);
@@ -50,36 +53,45 @@ public class Fairway {
                             scanner.nextLine();
 
                             System.out.print("Masukkan username: ");
-                            String username = scanner.nextLine();
+                            String username = scanner.nextLine().trim();
+                            if (username.isEmpty()) {
+                                System.out.println("Username tidak boleh kosong. Silakan coba lagi.");
+                                continue; // Kembali ke awal loop
+                            }
+
                             System.out.print("Masukkan password: ");
-                            String password = scanner.nextLine();
+                            String password = scanner.nextLine().trim();
+                            if (password.isEmpty()) {
+                                System.out.println("Password tidak boleh kosong. Silakan coba lagi.");
+                                continue; // Kembali ke awal loop
+                            }
 
                             switch (userType) {
                                 case 1:
                                     System.out.print("Masukkan CV (contoh: CV.pdf): ");
                                     String cv = scanner.nextLine();
                                     jobSeeker = new Jobseeker(username, password, cv);
-                                    if (accountManager.register(jobSeeker)) {
-                                        System.out.println("Pendaftaran berhasil sebagai JobSeeker!");
-                                    } else {
-                                        System.out.println("Username sudah digunakan, coba lagi.");
-                                    }
+                                    accountManager.register(jobSeeker);
+                                    System.out.println("Pendaftaran berhasil sebagai JobSeeker!");
                                     break;
                                 case 2:
                                     System.out.print("Masukkan nama perusahaan: ");
                                     String companyName = scanner.nextLine();
+                                    if (companyName.isEmpty()) {
+                                        System.out.println("Nama perusahaan tidak boleh kosong. Silakan coba lagi.");
+                                        continue;
+                                    }
                                     User instansi = new Instansi(username, password, companyName);
                                     SortedJob.put(companyName, new ArrayList<>());
-                                    if (accountManager.register(instansi)) {
-                                        System.out.println("Pendaftaran berhasil sebagai Instansi!");
-                                    } else {
-                                        System.out.println("Username sudah digunakan, coba lagi.");
-                                    }
+                                    accountManager.register(instansi);
+                                    System.out.println("Pendaftaran berhasil sebagai Instansi!");
                                     break;
                                 default:
                                     System.out.println("Tipe user tidak valid!");
                                     break;
                             }
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
                         } catch (InputMismatchException e) {
                             System.out.println("Input tidak valid. Harus berupa angka.");
                             scanner.nextLine(); // Bersihkan input
@@ -89,22 +101,29 @@ public class Fairway {
                     case 2: // Login
                         try {
                             System.out.print("Masukkan username: ");
-                            String logUsername = scanner.nextLine();
+                            String logUsername = scanner.nextLine().trim();
+                            if (logUsername.isEmpty()) {
+                                System.out.println("Username tidak boleh kosong. Silakan coba lagi.");
+                                continue;
+                            }
+
                             System.out.print("Masukkan password: ");
-                            String logPassword = scanner.nextLine();
+                            String logPassword = scanner.nextLine().trim();
+                            if (logPassword.isEmpty()) {
+                                System.out.println("Password tidak boleh kosong. Silakan coba lagi.");
+                                continue;
+                            }
 
                             User loggedInUser = accountManager.login(logUsername, logPassword);
-                            if (loggedInUser != null) {
-                                System.out.println("Login berhasil sebagai " + loggedInUser.getRole() + "!");
-                                if (loggedInUser instanceof Jobseeker) {
-                                    jobSeeker = (Jobseeker) loggedInUser;
-                                    jobseekerMenu(scanner, (Jobseeker) jobSeeker, accountManager);
-                                } else if (loggedInUser instanceof Instansi) {
-                                    instansiMenu(scanner, (Instansi) loggedInUser, accountManager);
-                                }
-                            } else {
-                                System.out.println("Username atau password salah.");
+                            System.out.println("Login berhasil sebagai " + loggedInUser.getRole() + "!");
+                            if (loggedInUser instanceof Jobseeker) {
+                                jobSeeker = (Jobseeker) loggedInUser;
+                                jobseekerMenu(scanner, (Jobseeker) jobSeeker, accountManager);
+                            } else if (loggedInUser instanceof Instansi) {
+                                instansiMenu(scanner, (Instansi) loggedInUser, accountManager);
                             }
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error: " + e.getMessage());
                         } catch (InputMismatchException e) {
                             System.out.println("Input tidak valid. Harus berupa teks.");
                             scanner.nextLine(); // Bersihkan input
@@ -112,21 +131,21 @@ public class Fairway {
                         break;
 
                     case 3: // Login sebagai Admin
-                    System.out.print("Masukkan username admin: ");
-                    String adminUsername = scanner.nextLine();
-                    System.out.print("Masukkan password admin: ");
-                    String adminPassword = scanner.nextLine();
+                        System.out.print("Masukkan username admin: ");
+                        String adminUsername = scanner.nextLine();
+                        System.out.print("Masukkan password admin: ");
+                        String adminPassword = scanner.nextLine();
 
-                    User loggedInAdmin = accountManager.login(adminUsername, adminPassword);
-                    if (loggedInAdmin != null && loggedInAdmin instanceof Admin) {
-                        Admin adminUser = (Admin) loggedInAdmin;
-                        System.out.println("Login berhasil sebagai Admin!");
-                        adminMenu(scanner, adminUser);
-                    } else {
-                        System.out.println("Username atau password salah.");
-                    }
-                    break;
-                    
+                        User loggedInAdmin = accountManager.login(adminUsername, adminPassword);
+                        if (loggedInAdmin != null && loggedInAdmin instanceof Admin) {
+                            Admin adminUser = (Admin) loggedInAdmin;
+                            System.out.println("Login berhasil sebagai Admin!");
+                            adminMenu(scanner, adminUser);
+                        } else {
+                            System.out.println("Username atau password salah.");
+                        }
+                        break;
+
                     case 4: // Keluar
                         System.out.println("Terima kasih telah menggunakan fairway.");
                         scanner.close();
@@ -289,7 +308,7 @@ public class Fairway {
             scanner.nextLine(); // Bersihkan input
         }
     }
-    
+
     private static void adminMenu(Scanner scanner, Admin admin) {
         while (true) {
             System.out.println("\n=== Menu Admin ===");
