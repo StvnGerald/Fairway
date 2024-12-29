@@ -221,11 +221,21 @@ public class Fairway {
                         break;
                     case 3:
                         break OUTER;
-                    case 4:
+                    case 4: //memasukakan instansi
+                        System.out.print("Masukkan nama instansi: ");
                         String instansi = scanner.nextLine();
-                        for (Job J : SortedJob.get(instansi)) {
-                            J.displayJobDetails();
+                        try {
+                            List<Job> jobsByInstansi = SortedJob.get(instansi);
+                            if (jobsByInstansi == null || jobsByInstansi.isEmpty()) {
+                                throw new Exception("Instansi tidak ditemukan atau tidak memiliki lowongan.");
+                            }
+                            for (Job job : jobsByInstansi) {
+                                job.displayJobDetails();
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error: " + e.getMessage());
                         }
+                        break;  
                     case 5:
                         System.out.print("Masukkan kategori (tekan Enter jika tidak ada): ");
                         String kategori = scanner.nextLine();
