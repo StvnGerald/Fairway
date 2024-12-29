@@ -22,13 +22,18 @@ public class Fairway {
         Scanner scanner = new Scanner(System.in);
         AccountManager accountManager = new AccountManager();
         User jobSeeker;
+        
+        // Menambahkan admin default untuk testing
+        Admin admin = new Admin("admin", "admin123", "Admin");
+        accountManager.register(admin);
 
         while (true) {
             try {
                 System.out.println("\n=== Sistem Login ===");
                 System.out.println("1. Daftar");
                 System.out.println("2. Login");
-                System.out.println("3. Keluar");
+                System.out.println("3. Login sebagai Admin");
+                System.out.println("4. Keluar");
                 System.out.print("Pilih opsi: ");
                 int choice = scanner.nextInt();
                 scanner.nextLine(); // Mengkonsumsi newline
@@ -105,7 +110,23 @@ public class Fairway {
                         }
                         break;
 
-                    case 3: // Keluar
+                    case 3: // Login sebagai Admin
+                    System.out.print("Masukkan username admin: ");
+                    String adminUsername = scanner.nextLine();
+                    System.out.print("Masukkan password admin: ");
+                    String adminPassword = scanner.nextLine();
+
+                    User loggedInAdmin = accountManager.login(adminUsername, adminPassword);
+                    if (loggedInAdmin != null && loggedInAdmin instanceof Admin) {
+                        Admin adminUser = (Admin) loggedInAdmin;
+                        System.out.println("Login berhasil sebagai Admin!");
+                        adminMenu(scanner, adminUser);
+                    } else {
+                        System.out.println("Username atau password salah.");
+                    }
+                    break;
+                    
+                    case 4: // Keluar
                         System.out.println("Terima kasih telah menggunakan fairway.");
                         scanner.close();
                         return;
@@ -247,5 +268,33 @@ public class Fairway {
         }
     }
     
-    
+    private static void adminMenu(Scanner scanner, Admin admin) {
+        while (true) {
+            System.out.println("\n=== Menu Admin ===");
+            System.out.println("1. Lihat lowongan yang menunggu persetujuan");
+            System.out.println("2. Keluar");
+            System.out.print("Pilih opsi: ");
+            int adminChoice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (adminChoice) {
+                case 1:
+                    // Tampilkan daftar lowongan yang menunggu persetujuan
+                    admin.listLowongan();
+
+                    System.out.print("Masukkan nama lowongan untuk disetujui: ");
+                    String namaLowongan = scanner.nextLine();
+                    admin.approveLowongan(namaLowongan);
+                    break;
+
+                case 2:
+                    return;
+
+                default:
+                    System.out.println("Pilihan tidak valid.");
+                    break;
+            }
+        }
+    }
+
 }
