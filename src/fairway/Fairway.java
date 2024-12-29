@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -128,6 +129,7 @@ public class Tubes {
                 System.out.println("1. Lihat lowongan");
                 System.out.println("2. Lihat lamaran saya");
                 System.out.println("4. Lihat lowongan berdasarkan instansi");
+                System.out.println("5. Cari lowongan");
                 System.out.println("3. Logout");
                 System.out.print("Pilih opsi: ");
                 int jobSeekerChoice = scanner.nextInt();
@@ -184,6 +186,26 @@ public class Tubes {
                         for (Job J : SortedJob.get(instansi)) {
                             J.displayJobDetails();
                         }
+                    case 5:
+                        System.out.print("Masukkan kategori (tekan Enter jika tidak ada): ");
+                        String kategori = scanner.nextLine();
+                        System.out.print("Masukkan nama pekerjaan (tekan Enter jika tidak ada): ");
+                        String jobName = scanner.nextLine();
+                        System.out.print("Masukkan gaji (tekan Enter jika tidak ada): ");
+                        String gaji = scanner.nextLine();
+                        System.out.print("Masukkan lokasi kerja (tekan Enter jika tidak ada): ");
+                        String lokasiKerja = scanner.nextLine();
+                        Searching searching = new Searching(kategori, jobName, gaji, lokasiKerja);
+                        List<Job> filteredJobs = searching.cariLowongan(accountManager.getJobListings());
+                        if (filteredJobs.isEmpty()) {
+                            System.out.println("Tidak ada lowongan yang sesuai dengan kriteria Anda.");
+                        } else {
+                            System.out.println("Lowongan yang sesuai:");
+                            for (Job job : filteredJobs) {
+                                job.displayJobDetails();
+                            }
+                        }
+                        break;
                     default:
                         System.out.println("Pilihan tidak valid.");
                         break;
