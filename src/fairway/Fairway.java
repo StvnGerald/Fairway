@@ -221,21 +221,53 @@ public class Fairway {
                         break;
                     case 3:
                         break OUTER;
-                    case 4: //memasukakan instansi
+                    case 4:
                         System.out.print("Masukkan nama instansi: ");
                         String instansi = scanner.nextLine();
-                        try {
-                            List<Job> jobsByInstansi = SortedJob.get(instansi);
-                            if (jobsByInstansi == null || jobsByInstansi.isEmpty()) {
-                                throw new Exception("Instansi tidak ditemukan atau tidak memiliki lowongan.");
+                        ArrayList<Job> jobsByInstansi = SortedJob.get(instansi);
+
+                        if (jobsByInstansi == null || jobsByInstansi.isEmpty()) {
+                            System.out.println("Tidak ada lowongan untuk instansi ini.");
+                        } else {
+                            System.out.println("Lowongan yang tersedia untuk instansi " + instansi + ":");
+                            for (int i = 0; i < jobsByInstansi.size(); i++) {
+                                Job job = jobsByInstansi.get(i);
+                                System.out.println((i + 1) + ". " + job.getTitle() + " (oleh " + job.getCompanyName() + ")");
                             }
-                            for (Job job : jobsByInstansi) {
-                                job.displayJobDetails();
+
+                        System.out.print("Pilih nomor lowongan untuk melihat detail (0 untuk kembali): ");
+                        jobChoice = scanner.nextInt();
+                        scanner.nextLine();
+
+                        if (jobChoice == 0) {
+                            break;
+                        } else if (jobChoice > 0 && jobChoice <= jobsByInstansi.size()) {
+                            Job selectedJob = jobsByInstansi.get(jobChoice - 1);
+                            selectedJob.displayJobDetails();
+
+                            while (true) {
+                                System.out.println("\n1. Lamar pekerjaan ini");
+                                System.out.println("2. Kembali ke daftar lowongan");
+                                System.out.print("Pilih opsi: ");
+                                int detailChoice = scanner.nextInt();
+                                scanner.nextLine();
+
+                                if (detailChoice == 1) {
+                                    System.out.println("Berhasil melamar pekerjaan: " + selectedJob.getTitle());
+                                    jobSeeker.applyJob(selectedJob.getTitle());
+                                    break;
+                                } else if (detailChoice == 2) {
+                                    break;
+                                } else {
+                                    System.out.println("Pilihan tidak valid, coba lagi.");
+                                }
                             }
-                        } catch (Exception e) {
-                            System.out.println("Error: " + e.getMessage());
+                        } else {
+                            System.out.println("Nomor lowongan tidak valid.");
                         }
-                        break;  
+                    }
+                    break;
+
                     case 5:
                         System.out.print("Masukkan kategori (tekan Enter jika tidak ada): ");
                         String kategori = scanner.nextLine();
@@ -245,19 +277,50 @@ public class Fairway {
                         String gaji = scanner.nextLine();
                         System.out.print("Masukkan lokasi kerja (tekan Enter jika tidak ada): ");
                         String lokasiKerja = scanner.nextLine();
+
                         Searching searching = new Searching(kategori, jobName, gaji, lokasiKerja);
                         List<Job> filteredJobs = searching.cariLowongan(accountManager.getJobListings());
+
                         if (filteredJobs.isEmpty()) {
                             System.out.println("Tidak ada lowongan yang sesuai dengan kriteria Anda.");
                         } else {
                             System.out.println("Lowongan yang sesuai:");
-                            for (Job job : filteredJobs) {
-                                job.displayJobDetails();
+                            for (int i = 0; i < filteredJobs.size(); i++) {
+                                Job job = filteredJobs.get(i);
+                                System.out.println((i + 1) + ". " + job.getTitle() + " (oleh " + job.getCompanyName() + ")");
+                            }
+
+                            System.out.print("Pilih nomor lowongan untuk melihat detail (0 untuk kembali): ");
+                            jobChoice = scanner.nextInt();
+                            scanner.nextLine();
+
+                            if (jobChoice == 0) {
+                                break;
+                            } else if (jobChoice > 0 && jobChoice <= filteredJobs.size()) {
+                                Job selectedJob = filteredJobs.get(jobChoice - 1);
+                                selectedJob.displayJobDetails();
+
+                                while (true) {
+                                    System.out.println("\n1. Lamar pekerjaan ini");
+                                    System.out.println("2. Kembali ke daftar hasil filter");
+                                    System.out.print("Pilih opsi: ");
+                                    int detailChoice = scanner.nextInt();
+                                    scanner.nextLine();
+
+                                    if (detailChoice == 1) {
+                                        System.out.println("Berhasil melamar pekerjaan: " + selectedJob.getTitle());
+                                        jobSeeker.applyJob(selectedJob.getTitle());
+                                        break;
+                                    } else if (detailChoice == 2) {
+                                        break;
+                                    } else {
+                                        System.out.println("Pilihan tidak valid, coba lagi.");
+                                    }
+                                }
+                            } else {
+                                System.out.println("Nomor lowongan tidak valid.");
                             }
                         }
-                        break;
-                    default:
-                        System.out.println("Pilihan tidak valid.");
                         break;
                 }
             }
@@ -288,7 +351,7 @@ public class Fairway {
                         String kategori = scanner.nextLine();
                         System.out.print("Masukkan lokasi kerja: ");
                         String lokasiKerja = scanner.nextLine();
-                        System.out.print("Masukkan syaratPelamar: ");
+                        System.out.print("Masukkan syarat pelamar : ");
                         String syaratPelamar = scanner.nextLine();
                         System.out.print("Masukkan waktu penerimaan: ");
                         String hireDate = scanner.nextLine();
