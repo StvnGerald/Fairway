@@ -51,4 +51,10 @@ class Jobseeker extends User {
             }
         }
     }
+    //
+    public void applyJob(Job job) { //Overloading
+        job.addApplicant(this);
+        System.out.println("Berhasil melamar pekerjaan: " + job.getTitle());
+    }
+    //
 }
