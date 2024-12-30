@@ -220,8 +220,6 @@ public class Fairway {
                         jobSeeker.viewAppliedJobs();
                         break;
                     case 3:
-                        break OUTER;
-                    case 4:
                         System.out.print("Masukkan nama instansi: ");
                         String instansi = scanner.nextLine();
                         ArrayList<Job> jobsByInstansi = SortedJob.get(instansi);
@@ -267,8 +265,7 @@ public class Fairway {
                         }
                     }
                     break;
-
-                    case 5:
+                    case 4:
                         System.out.print("Masukkan kategori (tekan Enter jika tidak ada): ");
                         String kategori = scanner.nextLine();
                         System.out.print("Masukkan nama pekerjaan (tekan Enter jika tidak ada): ");
@@ -322,6 +319,9 @@ public class Fairway {
                             }
                         }
                         break;
+
+                    case 5:
+                        break OUTER;
                 }
             }
         } catch (InputMismatchException e) {
