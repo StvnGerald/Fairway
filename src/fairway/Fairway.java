@@ -368,7 +368,80 @@ public class Fairway {
                         break;
                     case 2:
                         instansi.viewJobs();
+                        System.out.print("Masukkan nomor lowongan untuk detail (0 untuk kembali): ");
+                        int jobIndex = scanner.nextInt() - 1;
+                        scanner.nextLine();
+/////
+                        if (jobIndex >= 0 && jobIndex < instansi.getJobs().size()) {
+                            Job selectedJob = instansi.getJobs().get(jobIndex);
+                            while (true) {
+                                selectedJob.displayJobDetails();
+                                System.out.println("\n1. Edit Lowongan");
+                                System.out.println("2. Lihat Pelamar");
+                                System.out.println("3. Seleksi Pelamar");
+                                System.out.println("4. Kembali");
+                                System.out.print("Pilih opsi: ");
+                                int detailChoice = scanner.nextInt();
+                                scanner.nextLine();
+                           
+                                switch (detailChoice) {
+                                    case 1:
+                                        System.out.print("Masukkan judul lowongan baru: ");
+                                        selectedJob.setTitle(scanner.nextLine());
+                                        System.out.print("Masukkan deskripsi baru: ");
+                                        selectedJob.setDescription(scanner.nextLine());
+                                        System.out.print("Masukkan kategori baru: ");
+                                        selectedJob.setKategori(scanner.nextLine());
+                                        System.out.print("Masukkan lokasi kerja baru: ");
+                                        selectedJob.setLokasiKerja(scanner.nextLine());
+                                        System.out.print("Masukkan tanggal penerimaan baru: ");
+                                        selectedJob.setHireDate(scanner.nextLine());
+                                        System.out.println("Masukkan gaji baru: ");
+                                        selectedJob.setGaji(scanner.nextLine());
+                                        System.out.println("Masukkan syarat pelamar baru: ");
+                                        selectedJob.setSyaratPelamar(scanner.nextLine());
+                                        System.out.println("Masukkan batas pengajuan lamaran baru: ");
+                                        selectedJob.setExpireDate(scanner.nextLine());
+                                        System.out.println("Masukkan jumlah orang diterima yang baru: ");
+                                        selectedJob.setLimitPenerimaan(scanner.nextInt());
+                                        System.out.println("Lowongan berhasil diperbarui.");
+                                        break;
+                                    /*
+                                    case 2:
+                                        selectedJob.displayApplicants();
+                                        break;
+                                    case 3:
+                                        if (selectedJob.getApplicants().size() <= selectedJob.getLimitPenerimaan()) {
+                                            System.out.println("Semua pelamar diterima.");
+                                    } else {
+                                            System.out.println("Pilih pelamar untuk diterima:");
+                                            for (int i = 0; i < selectedJob.getApplicants().size(); i++) {
+                                                System.out.println((i + 1) + ". " + selectedJob.getApplicants().get(i).getUsername());
+                                               }
+                                            System.out.print("Masukkan nomor pelamar yang diterima (pisahkan dengan koma): ");
+                                            String[] selectedIndexes = scanner.nextLine().split(",");
+                                            System.out.println("Pelamar yang diterima:");
+                                            for (String index : selectedIndexes) {
+                                                int idx = Integer.parseInt(index.trim()) - 1;
+                                                if (idx >= 0 && idx < selectedJob.getApplicants().size()) {
+                                                    System.out.println("- " + selectedJob.getApplicants().get(idx).getUsername());
+                                                }
+                                            }
+                                        }
+                                        break;
+*/
+                                    case 4:
+                                    break;
+                                    default:
+                                        System.out.println("Pilihan tidak valid.");
+                                    }
+                                if (detailChoice == 4) break;
+                            }
+                        } else if (jobIndex != -1) {
+                            System.out.println("Nomor lowongan tidak valid.");
+                            }
                         break;
+/////
                     case 3:
                         break OUTER_1;
                     default:
